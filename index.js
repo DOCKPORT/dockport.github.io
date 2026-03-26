@@ -110,12 +110,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const x = Math.cos(currentAngle) * this.radius + width / 2;
                 const y = Math.sin(currentAngle) * this.radius + height / 2;
                 
-                // Bold technical scale (12px min)
-                const size = Math.max(12, (this.radius / (width / 2)) * 34);
+                // Responsive technical scale
+                const sizeBase = this.isMobile ? 18 : 34;
+                const sizeMin = this.isMobile ? 8 : 12;
+                const size = Math.max(sizeMin, (this.radius / this.maxRadius) * sizeBase);
                 
                 const pulse = Math.sin(time * 0.0005 - this.radius * 0.008); 
                 // Enhanced "Radial Glow" Opacity
-                const baseOpacity = Math.max(0.15, Math.pow(this.radius / (width / 2), 0.7) * 1.15);
+                const baseOpacity = Math.max(0.15, Math.pow(this.radius / (this.maxRadius), 0.7) * 1.15);
                 const finalOpacity = Math.min(1.0, baseOpacity * (0.55 + pulse * 0.45));
 
                 // Absolute focus on Consolas for technical data
@@ -131,28 +133,25 @@ document.addEventListener('DOMContentLoaded', () => {
             height = canvas.height = window.innerHeight;
             particles = [];
             
+            const isMobile = width < 768;
             const binaryChars = ['1', '0', '1', '0', '1', '0', '+', '[]'];
             const currencyChars = ['$', '£', '€', '¥', '₿', '$', '£', '€', '¥', '₿', '▲', '▼', '%', '%', '%'];
-            
-            // Consolas as the primary monospaced choice for a clean technical look
             const fontStack = "'Consolas', 'Fira Code', 'Source Code Pro', monospace";
             
-            // Create Concentric Rings
-            const ringCount = 14; 
-            const maxRadius = Math.max(width, height) * 0.9;
+            // Responsive ring configuration
+            const ringCount = isMobile ? 8 : 14; 
+            const maxRadius = Math.max(width, height) * (isMobile ? 0.7 : 0.9);
             
             for (let r = 1; r < ringCount; r++) {
                 const radius = (r / ringCount) * maxRadius;
-                const particlesInRing = 12 + (r * 10); 
+                // Fewer particles on mobile for clarity
+                const particlesInRing = isMobile ? (6 + (r * 4)) : (12 + (r * 10)); 
                 
                 const isCurrencyRing = (r % 2 === 0);
                 const currentPool = isCurrencyRing ? currencyChars : binaryChars;
-                
-                // Almost imperceptibly slow rotation for maximum professionalism
                 const rotationSpeed = (r % 2 === 0) ? 0.00001 : -0.00001;
 
                 let lastChar = '';
-                
                 for (let i = 0; i < particlesInRing; i++) {
                     const angle = (i / particlesInRing) * Math.PI * 2;
                     let char;
@@ -161,8 +160,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     } while (char === lastChar);
                     
                     lastChar = char;
-                    
-                    particles.push(new BinaryParticle(angle, radius, char, rotationSpeed, fontStack));
+                    const p = new BinaryParticle(angle, radius, char, rotationSpeed, fontStack);
+                    // Attach context for responsive sizing in draw()
+                    p.isMobile = isMobile;
+                    p.maxRadius = maxRadius;
+                    particles.push(p);
                 }
             }
         }
