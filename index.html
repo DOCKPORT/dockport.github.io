@@ -10,41 +10,19 @@
     <link rel="stylesheet" href="index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
 </head>
 
 <body id="top">
     <header id="header">
-        <nav class="container nav-balanced">
-            <div class="nav-left"></div>
-            <a href="#top" class="logo-link">
+        <nav class="container nav-centered">
+            <div class="logo-wrapper">
                 <div class="logo">
                     <img src="DPL.svg" alt="DockPort Logo" id="main-logo">
                     <span class="logo-text">DockPort</span>
-                </div>
-            </a>
-            <div class="nav-right">
-                <a href="#features" class="nav-side-link">What we do</a>
-                <div class="nav-dropdown-wrapper">
-                    <span class="nav-side-link dropdown-trigger">Contact</span>
-                    <div class="nav-dropdown">
-                        <div class="dropdown-content">
-                            <span id="contact-email">dockport_dev@protonmail.com</span>
-                            <button id="copy-email-btn" class="copy-btn" title="Copy to clipboard">
-                                <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                </svg>
-                                <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" style="display: none;">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
+                    <span class="email-subtext">dockport_dev@protonmail.com</span>
                 </div>
             </div>
         </nav>
@@ -52,12 +30,10 @@
 
     <main>
         <section id="hero">
-            <div class="hero-background">
-                <canvas id="binary-canvas"></canvas>
-            </div>
             <div class="container hero-content">
                 <h1 class="fade-in">
-                    <span class="text-gradient">Industry-Grade Software <br>Solutions for You.</span>
+                    <span class="mono-brand-text text-gradient">Software solutions</span>
+                    <span class="white-text-accent">&mdash; for you.</span>
                 </h1>
                 <p class="fade-in-delayed">Developing the definitive standard in dedicated terminal solutions for
                     businesses—built for stability, power, and absolute accuracy.</p>
