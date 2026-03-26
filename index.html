@@ -10,14 +10,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body id="top">
     <header id="header">
         <nav class="container nav-balanced">
             <div class="nav-left"></div>
-            <div class="logo">
-                <img src="DPL.svg" alt="DockPort Logo" id="main-logo">
-                <span class="logo-text">DockPort</span>
-            </div>
+            <a href="#top" class="logo-link">
+                <div class="logo">
+                    <img src="DPL.svg" alt="DockPort Logo" id="main-logo">
+                    <span class="logo-text">DockPort</span>
+                </div>
+            </a>
             <div class="nav-right">
                 <a href="#features" class="nav-side-link">What we do</a>
                 <div class="nav-dropdown-wrapper">
@@ -39,98 +41,19 @@
     <main>
         <section id="hero">
             <div class="hero-background">
-                <div class="glow-orb" id="orb-1"></div>
-                <div class="glow-orb" id="orb-2"></div>
+                <canvas id="binary-canvas"></canvas>
             </div>
             <div class="container hero-content">
-                <h1 class="fade-in">Navigate the Global <br><span class="text-gradient">Financial Nexus</span></h1>
-                <p class="fade-in-delayed">Real-time data synchronization, advanced z-score analytics, and premium market visualizations for professional traders and institutions.</p>
-                <div class="hero-cta fade-in-delayed">
-                    <a href="#contact" class="btn-primary-large">Launch Terminal</a>
-                    <a href="#features" class="btn-secondary-large">Explore Features</a>
-                </div>
+                <h1 class="fade-in">
+                    <span class="text-gradient">Industry-Grade Software <br>Solutions for You.</span>
+                </h1>
+                <p class="fade-in-delayed">Developing the definitive standard in dedicated terminal solutions for businesses—built for stability, power, and absolute accuracy.</p>
             </div>
-        </section>
-
-        <section id="features" class="container">
-            <h2 class="section-title">Engineered for Performance</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Real-time Sync</h3>
-                    <p>Sub-millisecond latency in market data synchronization across global assets including Forex, Crypto, and Equities.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Advanced Analytics</h3>
-                    <p>Proprietary Z-Score calculations and trend analysis to identify market anomalies before they become mainstream.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🌐</div>
-                    <h3>Global Reach</h3>
-                    <p>Integrate with hundreds of liquidity providers and data sources through our unified infrastructure layer.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="about" class="infrastructure-section">
-            <div class="container reveal">
-                <div class="infra-content">
-                    <h2>Seamless Integration</h2>
-                    <p>DockPort is built on a resilient architecture that scales with your needs. Whether you're a retail trader or an institutional player, our tools provide the edge you need.</p>
-                    <ul class="infra-list">
-                        <li><span>✓</span> Robust Python-based Backend Engines</li>
-                        <li><span>✓</span> High-Performance WebDash Interfaces</li>
-                        <li><span>✓</span> Automated Forex & Asset Polling</li>
-                    </ul>
-                </div>
-                <div class="infra-visual">
-                    <div class="visual-box">
-                        <div class="code-snippet">
-                            <code>
-<span class="code-keyword">async def</span> <span class="code-func">sync_data</span>():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;engine = <span class="code-class">DockPortEngine</span>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">await</span> engine.initialize()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;engine.poll_market_data()
-                            </code>
-                        </div>
-                    </div>
-                </div>
+            <div class="hero-bottom-info fade-in-delayed">
+                <p>&copy; 2025 DockPort. All rights reserved.</p>
             </div>
         </section>
     </main>
-
-    <footer id="contact">
-        <div class="container footer-content">
-            <div class="footer-brand">
-                <img src="DPL.svg" alt="DockPort Logo" class="footer-logo">
-                <h3>DockPort</h3>
-                <p>Redefining the standard for financial data infrastructure.</p>
-                <p style="margin-top: 1rem; color: var(--primary-teal); font-family: 'Fira Code', monospace; font-size: 0.9rem;">dockport_dev@protonmail.com</p>
-            </div>
-            <div class="footer-links">
-                <div class="link-group">
-                    <h4>Platform</h4>
-                    <ul>
-                        <li><a href="#">Terminal</a></li>
-                        <li><a href="#">API Docs</a></li>
-                        <li><a href="#">Status</a></li>
-                    </ul>
-                </div>
-                <div class="link-group">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Privacy</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom container">
-            <p>&copy; 2026 DockPort. All rights reserved.</p>
-        </div>
-    </footer>
 
     <script src="index.js"></script>
 </body>
