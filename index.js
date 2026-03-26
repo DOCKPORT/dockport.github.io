@@ -96,35 +96,61 @@ document.addEventListener('DOMContentLoaded', () => {
         const color = '#00c4b4';
 
         class BinaryParticle {
-            constructor(angle, radius, char, rotationSpeed, fontFamily) {
+            constructor(char, fontFamily) {
+                this.text = char;
+                this.fontFamily = fontFamily;
+                this.isGrid = false;
+            }
+
+            setRadial(angle, radius, speed, maxRadius) {
                 this.baseAngle = angle;
                 this.radius = radius;
-                this.text = char;
-                this.rotationSpeed = rotationSpeed;
-                this.fontFamily = fontFamily;
+                this.rotationSpeed = speed;
+                this.maxRadius = maxRadius;
+                this.isGrid = false;
+            }
+
+            setGrid(x, y, opacity) {
+                this.x = x;
+                this.y = y;
+                this.fixedOpacity = opacity;
+                this.isGrid = true;
             }
 
             draw(time) {
-                // Precise rotational positioning per requested slow pace
-                const currentAngle = this.baseAngle + (time * this.rotationSpeed);
-                const x = Math.cos(currentAngle) * this.radius + width / 2;
-                const y = Math.sin(currentAngle) * this.radius + height / 2;
+                let drawX, drawY, size, opacity;
                 
-                // Responsive technical scale
-                const sizeBase = this.isMobile ? 18 : 34;
-                const sizeMin = this.isMobile ? 8 : 12;
-                const size = Math.max(sizeMin, (this.radius / this.maxRadius) * sizeBase);
-                
-                const pulse = Math.sin(time * 0.0005 - this.radius * 0.008); 
-                // Enhanced "Radial Glow" Opacity
-                const baseOpacity = Math.max(0.15, Math.pow(this.radius / (this.maxRadius), 0.7) * 1.15);
-                const finalOpacity = Math.min(1.0, baseOpacity * (0.55 + pulse * 0.45));
+                if (this.isGrid) {
+                    drawX = this.x;
+                    drawY = this.y;
+                    size = this.isMobile ? 12 : 15; 
+                    
+                    // Dynamic focal point intensity
+                    const dx = drawX - focalX;
+                    const dy = drawY - focalY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const range = Math.max(width, height) * 0.6;
+                    const flow = Math.max(0, 1 - (dist / range));
+                    
+                    // Bright, shifting contrast
+                    opacity = (this.fixedOpacity * 0.3) + (Math.pow(flow, 1.5) * 0.75);
+                    opacity = Math.min(0.9, opacity);
+                } else {
+                    const currentAngle = this.baseAngle + (time * this.rotationSpeed);
+                    drawX = Math.cos(currentAngle) * this.radius + width / 2;
+                    drawY = Math.sin(currentAngle) * this.radius + height / 2;
+                    const sizeBase = 34;
+                    const sizeMin = 12;
+                    size = Math.max(sizeMin, (this.radius / this.maxRadius) * sizeBase);
+                    const pulse = Math.sin(time * 0.0005 - this.radius * 0.008); 
+                    const baseOpacity = Math.max(0.15, Math.pow(this.radius / (this.maxRadius), 0.7) * 1.15);
+                    opacity = Math.min(1.0, baseOpacity * (0.55 + pulse * 0.45));
+                }
 
-                // Absolute focus on Consolas for technical data
                 ctx.font = `${size}px ${this.fontFamily}`;
                 ctx.fillStyle = color;
-                ctx.globalAlpha = finalOpacity;
-                ctx.fillText(this.text, x, y);
+                ctx.globalAlpha = opacity;
+                ctx.fillText(this.text, drawX, drawY);
             }
         }
 
@@ -137,33 +163,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const binaryChars = ['1', '0', '1', '0', '1', '0', '+', '[]'];
             const currencyChars = ['$', '£', '€', '¥', '₿', '$', '£', '€', '¥', '₿', '▲', '▼', '%', '%', '%'];
             const fontStack = "'Consolas', 'Fira Code', 'Source Code Pro', monospace";
+            const pool = [...binaryChars, ...currencyChars];
             
-            // Responsive ring configuration
-            const ringCount = isMobile ? 8 : 14; 
-            const maxRadius = Math.max(width, height) * (isMobile ? 0.7 : 0.9);
+            // Grid sizing: denser on mobile, broader on desktop
+            const spacing = isMobile ? 40 : 56;
+            const cols = Math.ceil(width / spacing) + 1;
+            const rows = Math.ceil(height / spacing) + 1;
             
-            for (let r = 1; r < ringCount; r++) {
-                const radius = (r / ringCount) * maxRadius;
-                // Fewer particles on mobile for clarity
-                const particlesInRing = isMobile ? (6 + (r * 4)) : (12 + (r * 10)); 
-                
-                const isCurrencyRing = (r % 2 === 0);
-                const currentPool = isCurrencyRing ? currencyChars : binaryChars;
-                const rotationSpeed = (r % 2 === 0) ? 0.00001 : -0.00001;
-
-                let lastChar = '';
-                for (let i = 0; i < particlesInRing; i++) {
-                    const angle = (i / particlesInRing) * Math.PI * 2;
-                    let char;
-                    do {
-                        char = currentPool[Math.floor(Math.random() * currentPool.length)];
-                    } while (char === lastChar);
+            for (let i = 0; i < cols; i++) {
+                for (let j = 0; j < rows; j++) {
+                    const char = pool[Math.floor(Math.random() * pool.length)];
+                    // Strategic subtle opacity for depth
+                    const opacity = isMobile ? (0.15 + Math.random() * 0.25) : (0.15 + Math.random() * 0.35);
+                    const p = new BinaryParticle(char, fontStack);
                     
-                    lastChar = char;
-                    const p = new BinaryParticle(angle, radius, char, rotationSpeed, fontStack);
-                    // Attach context for responsive sizing in draw()
+                    // Add subtle randomness to position for a "digitized" feel rather than rigid grid
+                    const offsetX = (Math.random() - 0.5) * (spacing * 0.3);
+                    const offsetY = (Math.random() - 0.5) * (spacing * 0.3);
+                    
+                    p.setGrid(i * spacing + offsetX, j * spacing + offsetY, opacity);
+                    // Pass mobile state for resizing
                     p.isMobile = isMobile;
-                    p.maxRadius = maxRadius;
                     particles.push(p);
                 }
             }
@@ -172,8 +192,16 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', resize);
         resize();
 
+        let focalX = 0;
+        let focalY = 0;
+
         function animate(time) {
             ctx.clearRect(0, 0, width, height);
+            
+            // Programmatically move searchlight focal point
+            focalX = (Math.sin(time * 0.0003) * 0.45 + 0.5) * width;
+            focalY = (Math.cos(time * 0.0004) * 0.45 + 0.5) * height;
+
             particles.forEach(p => p.draw(time));
             requestAnimationFrame(animate);
         }
