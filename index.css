@@ -292,14 +292,14 @@ h1 {
 
 .specialty-image {
     width: 100%;
-    height: 280px;
+    height: 340px;
     object-fit: cover;
     object-position: center 35%;
     border-radius: 12px;
     margin-top: auto; /* Aligns all images at the bottom of the card */
     background: #111;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    transform: scale(1.15); /* Zooms into the image to make details more visible */
+    transform: scale(1.05); /* Slightly zoomed for focus without losing the wider environment */
     transform-origin: center;
 }
 
