@@ -1,5 +1,6 @@
 :root {
-    --bg-color: #0d0d0d; /* Transitioned from pure black to a refined deep grey */
+    --bg-color: #0d0d0d;
+    /* Transitioned from pure black to a refined deep grey */
     --text-primary: #ffffff;
     --text-muted: rgba(255, 255, 255, 0.6);
     --primary-teal: #00c4b4;
@@ -28,9 +29,13 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: 0 2rem;
+}
+
+.text-center {
+    text-align: center;
 }
 
 /* Header & Navigation */
@@ -40,10 +45,12 @@ header {
     left: 0;
     width: 100%;
     z-index: 1000;
-    padding: 0.35rem 0; 
+    padding: 0.35rem 0;
     backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Replaced teal with a sophisticated neutral grey */
-    background: rgba(13, 13, 13, 0.95); /* More opaque for better separation */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    /* Replaced teal with a sophisticated neutral grey */
+    background: rgba(13, 13, 13, 0.95);
+    /* More opaque for better separation */
 }
 
 .nav-centered {
@@ -54,21 +61,23 @@ header {
 }
 
 .email-subtext {
-    color: #aaaaaa;
-    font-size: 0.82rem;
+    color: #dddddd;
+    font-size: 0.95rem;
     font-family: 'JetBrains Mono', monospace;
     margin-top: 0.15rem;
-    opacity: 0.9;
+    opacity: 1;
 }
 
-.logo-link, .footer-brand-link {
+.logo-link,
+.footer-brand-link {
     text-decoration: none;
     color: inherit;
     display: block;
     transition: var(--transition);
 }
 
-.logo-link:hover, .footer-brand-link:hover {
+.logo-link:hover,
+.footer-brand-link:hover {
     filter: brightness(1.2);
 }
 
@@ -76,12 +85,14 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.2rem; /* Strategic gap for clarity */
+    gap: 0.2rem;
+    /* Strategic gap for clarity */
     text-align: center;
 }
 
 .logo img {
-    height: 110px; /* Slightly refined from 128px */
+    height: 110px;
+    /* Slightly refined from 128px */
     width: auto;
 }
 
@@ -90,46 +101,35 @@ header {
     font-weight: 600;
     color: var(--primary-teal);
     letter-spacing: -0.04em;
-    margin-top: -0.5rem; /* Reduced negative margin for breathing room */
+    margin-top: -0.5rem;
+    /* Reduced negative margin for breathing room */
 }
 
 /* nav-links removed in favor of side-buttons */
 
 /* Hero Section */
 #hero {
-    height: 100vh;
+    min-height: 60vh;
     display: flex;
     align-items: center;
     position: relative;
     overflow: hidden;
-    padding-top: 14rem; /* Adjusted from 16rem for slightly smaller header */
+    padding-top: 10rem;
 }
 
-/* Hero section simplified */
-#hero {
-    position: relative;
-    padding-top: 14rem;
+footer {
+    width: 100% !important;
+    z-index: 10 !important;
+    padding: 2rem 0 !important;
+    text-align: center;
 }
 
-#hero .hero-bottom-info p {
+footer p {
     color: #888888 !important;
     font-weight: 300 !important;
     font-size: 0.75rem !important;
-    text-align: center !important;
     letter-spacing: 0.15em !important;
     margin: 0 !important;
-    padding: 0 !important;
-    max-width: none !important;
-    width: 100% !important;
-}
-
-.hero-bottom-info {
-    position: absolute !important;
-    bottom: 0.75rem !important;
-    left: 0 !important;
-    width: 100% !important;
-    z-index: 10 !important;
-    pointer-events: none; /* Avoid blocking any interactions since it's full-width */
 }
 
 /* Glow orbs removed for direct binary visibility */
@@ -137,7 +137,7 @@ header {
 .hero-content {
     text-align: center;
     max-width: 1100px;
-    margin-top: -20vh;
+    margin-top: 0;
     position: relative;
     z-index: 10;
 }
@@ -152,14 +152,15 @@ h1 {
 
 .mono-brand-text {
     font-family: 'JetBrains Mono', monospace;
-    font-weight: 700; 
+    font-weight: 700;
     letter-spacing: -0.01em;
 }
 
 .white-text-accent {
     color: #ffffff;
     font-family: 'Outfit', -apple-system, sans-serif;
-    letter-spacing: -0.04em; /* Match h1 spacing */
+    letter-spacing: -0.04em;
+    /* Match h1 spacing */
 }
 
 .text-gradient {
@@ -169,7 +170,8 @@ h1 {
     -moz-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    color: transparent; /* Fallback for transparency */
+    color: transparent;
+    /* Fallback for transparency */
     display: inline-block;
     vertical-align: top;
     line-height: 1.1;
@@ -236,6 +238,102 @@ h1 {
     color: var(--primary-teal);
 }
 
+/* Specialties Section */
+#specialties {
+    padding: 0 1rem 6rem;
+    margin-top: -4rem;
+    position: relative;
+    z-index: 5;
+}
+
+.section-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: var(--primary-teal);
+    margin-bottom: 2rem;
+    letter-spacing: -0.04em;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: var(--primary-teal);
+    margin: 1rem auto 0.5rem;
+    border-radius: 2px;
+}
+
+.specialties-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.specialty-item {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    /* Slightly reduced padding to accommodate image */
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    overflow: hidden;
+    /* For rounded image corners at top if needed */
+}
+
+.specialty-image {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    object-position: center 35%;
+    border-radius: 12px;
+    margin-top: auto; /* Aligns all images at the bottom of the card */
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transform: scale(1.15); /* Zooms into the image to make details more visible */
+    transform-origin: center;
+}
+
+
+.specialty-number {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--primary-teal);
+    font-size: 1.5rem; /* Matches .specialty-name */
+    font-weight: 600;  /* Matches .specialty-name */
+    margin-right: 0.6rem;
+    display: inline-block;
+}
+
+.specialty-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+    min-height: 4.5rem; /* Synchronizes the start position of subtext */
+    display: flex;
+    align-items: flex-start;
+}
+
+.specialty-description {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.85);
+    /* Lightened for better visibility */
+    line-height: 1.7;
+    font-weight: 300;
+    margin-top: 0.6rem;
+    margin-bottom: 2.5rem;
+}
+
+
 /* Animations */
 .fade-in {
     opacity: 0;
@@ -268,24 +366,27 @@ h1 {
         padding-top: 0.5rem;
     }
 
-    .nav-left, .nav-right {
+    .nav-left,
+    .nav-right {
         justify-content: center;
         gap: 1.5rem;
     }
 
     .logo img {
-        height: 54px; /* Scaled down further for mobile */
+        height: 54px;
+        /* Scaled down further for mobile */
     }
 
     .logo-text {
-        font-size: 1.5rem; /* Scaled down further for mobile */
+        font-size: 1.5rem;
+        /* Scaled down further for mobile */
         margin-top: -0.4rem;
     }
 
     #hero {
-        padding-top: 5rem; /* Reduced significantly from 12rem */
+        padding-top: 9.25rem; /* Further increased to clear taller mobile headers */
         height: auto;
-        min-height: 100vh;
+        min-height: 40vh; /* Reduced from 100vh */
         padding-bottom: 2rem;
         display: flex;
         flex-direction: column;
@@ -293,19 +394,20 @@ h1 {
     }
 
     .hero-content {
-        margin-top: -2vh; 
+        margin-top: 0; /* Reset for mobile */
         padding: 0 1.5rem;
         width: 100%;
     }
 
     h1 {
-        font-size: 2rem; /* Slightly smaller for tighter mobile screens */
-        margin-bottom: 1.5rem;
+        font-size: 2rem;
+        /* Slightly smaller for tighter mobile screens */
+        margin-bottom: 1rem; /* Reduced from 1.5rem */
     }
 
     #hero p {
         font-size: 1rem;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem; /* Reduced from 2rem */
     }
 
     .hero-cta {
@@ -316,10 +418,26 @@ h1 {
         margin: 0 auto;
     }
 
-    .btn-primary-large, .btn-secondary-large {
+    .btn-primary-large,
+    .btn-secondary-large {
         width: 100%;
         text-align: center;
         padding: 0.8rem 1.5rem;
         font-size: 1rem;
+    }
+
+    .specialties-grid {
+        grid-template-columns: 1fr; /* Stacked on mobile */
+        gap: 1.5rem;
+    }
+
+    #specialties {
+        padding-top: 2rem; /* Reduced from 10rem for tighter flow */
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1200px) {
+    .specialties-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2x2 on tablets */
     }
 }
