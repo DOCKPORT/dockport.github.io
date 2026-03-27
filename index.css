@@ -40,17 +40,14 @@ body {
 
 /* Header & Navigation */
 header {
-    position: fixed;
+    position: absolute; /* Changed from fixed to scroll away with the page */
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
     padding: 0.35rem 0;
-    backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    /* Replaced teal with a sophisticated neutral grey */
-    background: rgba(13, 13, 13, 0.95);
-    /* More opaque for better separation */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-color); /* Matches the main page background */
 }
 
 .nav-centered {
@@ -91,30 +88,30 @@ header {
 }
 
 .logo img {
-    height: 110px;
-    /* Slightly refined from 128px */
+    height: 90px;
+    /* Reduced from 110px for better vertical space */
     width: auto;
 }
 
 .logo-text {
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: 600;
     color: var(--primary-teal);
     letter-spacing: -0.04em;
-    margin-top: -0.5rem;
-    /* Reduced negative margin for breathing room */
+    margin-top: -0.2rem;
+    /* More breathing room */
 }
 
 /* nav-links removed in favor of side-buttons */
 
 /* Hero Section */
 #hero {
-    min-height: 60vh;
+    min-height: 50vh; /* Reduced from 60vh for tighter vertical flow */
     display: flex;
     align-items: center;
     position: relative;
     overflow: hidden;
-    padding-top: 10rem;
+    padding-top: 13rem; /* Safe clearance for fixed header */
 }
 
 footer {
@@ -165,13 +162,13 @@ h1 {
 
 .text-gradient {
     /* More robust mobile support for background clips */
-    background: linear-gradient(110deg, var(--secondary-teal) 0%, var(--primary-teal) 15%, var(--primary-teal) 85%, #00ffeb 100%);
+    color: var(--primary-teal); /* Consistent with specific color request */
     -webkit-background-clip: text;
     -moz-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    color: transparent;
-    /* Fallback for transparency */
+    background-image: linear-gradient(110deg, var(--secondary-teal) 0%, var(--primary-teal) 40%, var(--primary-teal) 100%);
+    /* Removed #00ffeb for strict #00c4b4 adherence */
     display: inline-block;
     vertical-align: top;
     line-height: 1.1;
@@ -240,16 +237,16 @@ h1 {
 
 /* Specialties Section */
 #specialties {
-    padding: 0 1rem 6rem;
-    margin-top: -4rem;
+    padding: 2rem 1rem 6rem;
+    /* Balanced top padding for better flow */
     position: relative;
     z-index: 5;
 }
 
 .section-title {
     font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 800;
-    color: var(--primary-teal);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.85); /* Matched with card subtext */
     margin-bottom: 2rem;
     letter-spacing: -0.04em;
     text-align: center;
@@ -355,6 +352,18 @@ h1 {
 }
 
 /* Mobile Responsiveness */
+@media (max-width: 1440px) {
+    .logo img {
+        height: 80px;
+    }
+    .logo-text {
+        font-size: 1.8rem;
+    }
+    #hero {
+        padding-top: 12rem;
+    }
+}
+
 @media (max-width: 968px) {
     header {
         padding: 0.4rem 0;
@@ -384,7 +393,7 @@ h1 {
     }
 
     #hero {
-        padding-top: 9.25rem; /* Further increased to clear taller mobile headers */
+        padding-top: 9rem; /* Clear smaller mobile fixed header */
         height: auto;
         min-height: 40vh; /* Reduced from 100vh */
         padding-bottom: 2rem;
@@ -400,14 +409,14 @@ h1 {
     }
 
     h1 {
-        font-size: 2rem;
-        /* Slightly smaller for tighter mobile screens */
-        margin-bottom: 1rem; /* Reduced from 1.5rem */
+        font-size: 2.2rem;
+        /* Slightly larger for a punchier mobile presence */
+        margin-bottom: 1.2rem;
     }
 
     #hero p {
-        font-size: 1rem;
-        margin-bottom: 1.5rem; /* Reduced from 2rem */
+        font-size: 1.1rem;
+        margin-bottom: 1.8rem;
     }
 
     .hero-cta {
