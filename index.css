@@ -108,6 +108,8 @@ header {
 #hero {
     min-height: 40vh; /* Reduced for tighter vertical flow between segments */
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     position: relative;
     overflow: hidden;
@@ -201,6 +203,75 @@ h1 {
     justify-content: center;
 }
 
+/* Ticker Styles */
+.ticker-wrap {
+    width: 100%;
+    overflow: hidden;
+    height: 3.5rem;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+.ticker {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker 50s linear infinite;
+}
+
+.ticker__item {
+    display: inline-block;
+    padding: 0 2rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+}
+
+.ticker__value {
+    color: var(--text-primary);
+    margin-left: 0.5rem;
+}
+
+.ticker__value--up {
+    color: var(--primary-teal);
+}
+
+.ticker__value--down {
+    color: #ff4d4d;
+}
+
+.flash-up {
+    animation: flashGreen 0.8s steps(1);
+}
+
+.flash-down {
+    animation: flashRed 0.8s steps(1);
+}
+
+@keyframes flashGreen {
+    0% { color: #00ff88; }
+    100% { color: var(--text-primary); }
+}
+
+@keyframes flashRed {
+    0% { color: #ff4d4d; }
+    100% { color: var(--text-primary); }
+}
+
+@keyframes ticker {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
 .btn-primary-large {
     background: var(--primary-teal);
     color: var(--bg-color);
@@ -240,7 +311,7 @@ h1 {
 
 /* Specialties Section */
 #specialties {
-    padding: 2rem 1rem 6rem;
+    padding: 0.5rem 1rem 6rem;
     /* Balanced top padding for better flow */
     position: relative;
     z-index: 5;
@@ -347,6 +418,16 @@ h1 {
     animation: fadeIn 0.8s 0.3s forwards;
 }
 
+.ticker-fade {
+    opacity: 0;
+    animation: tickerTapeFade 3s ease-in-out 1s forwards;
+}
+
+@keyframes tickerTapeFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 @keyframes fadeIn {
     to {
         opacity: 1;
@@ -449,7 +530,42 @@ h1 {
     }
 
     #specialties {
-        padding-top: 2rem; /* Reduced from 10rem for tighter flow */
+        padding-top: 0.5rem; /* Reduced for tighter flow */
+    }
+
+    /* Static Ticker for Mobile */
+    .ticker-wrap {
+        height: auto;
+        mask-image: none;
+        padding: 0.5rem 1.5rem;
+    }
+
+    .ticker {
+        animation: none;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.3rem 1rem;
+        justify-content: center;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .ticker__item {
+        padding: 0.3rem 0;
+        font-size: 0.85rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr 0.8fr;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .ticker__item .ticker__value {
+        margin-left: 0;
+        text-align: right;
+    }
+
+    .ticker__item:nth-child(n+6) {
+        display: none;
     }
 }
 

@@ -89,5 +89,207 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- Translation logic and Binary Effect removed per Request ---
+    // --- Bybit WebSocket Ticker ---
+    function initBybitTicker() {
+        const ticker = document.getElementById('bybit-ticker');
+        if (!ticker) return;
+
+        // State management for multiple symbols
+        const symbols = {
+            'BTCUSDT': {
+                priceEls: ticker.querySelectorAll('.btc-price'),
+                changeEls: ticker.querySelectorAll('.btc-change'),
+                lastPrice: 0,
+                lastPriceStr: "",
+                lastUpdate: 0, timer: null, pendingData: null
+            },
+            'XAUTUSDT': {
+                priceEls: ticker.querySelectorAll('.xaut-price'),
+                changeEls: ticker.querySelectorAll('.xaut-change'),
+                lastPrice: 0,
+                lastPriceStr: "",
+                lastUpdate: 0, timer: null, pendingData: null
+            },
+            'NVDAXUSDT': {
+                priceEls: ticker.querySelectorAll('.nvdax-price'),
+                changeEls: ticker.querySelectorAll('.nvdax-change'),
+                lastPrice: 0,
+                lastPriceStr: "",
+                lastUpdate: 0, timer: null, pendingData: null
+            },
+            'TSLAXUSDT': {
+                priceEls: ticker.querySelectorAll('.tslax-price'),
+                changeEls: ticker.querySelectorAll('.tslax-change'),
+                lastPrice: 0,
+                lastPriceStr: "",
+                lastUpdate: 0, timer: null, pendingData: null
+            },
+            'GOOGLXUSDT': {
+                priceEls: ticker.querySelectorAll('.googlx-price'),
+                changeEls: ticker.querySelectorAll('.googlx-change'),
+                lastPrice: 0,
+                lastPriceStr: "",
+                lastUpdate: 0, timer: null, pendingData: null
+            }
+        };
+
+        let socket;
+        let reconnectTimeout;
+
+        // Function to update the DOM for a specific symbol
+        function updateTickerUI(symbol, priceValue, changeValue) {
+            const state = symbols[symbol];
+            if (!state) return;
+
+            const currentPrice = parseFloat(priceValue);
+            const priceStr = currentPrice.toLocaleString(undefined, { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: symbol === 'XAUTUSDT' ? 2 : 2 
+            });
+            const changeStr = (parseFloat(changeValue) * 100).toFixed(2);
+            const isUp = parseFloat(changeValue) >= 0;
+
+            // Determine flash direction and parts
+            let flashClass = '';
+            let stablePart = priceStr;
+            let changingPart = '';
+
+            if (state.lastPriceStr && state.lastPriceStr !== priceStr) {
+                if (currentPrice > state.lastPrice) flashClass = 'flash-up';
+                else if (currentPrice < state.lastPrice) flashClass = 'flash-down';
+
+                // Find the first character that changed
+                if (state.lastPriceStr.length !== priceStr.length) {
+                    stablePart = '';
+                    changingPart = priceStr;
+                } else {
+                    let firstDiff = -1;
+                    for (let i = 0; i < priceStr.length; i++) {
+                        if (priceStr[i] !== state.lastPriceStr[i]) {
+                            firstDiff = i;
+                            break;
+                        }
+                    }
+                    if (firstDiff !== -1) {
+                        stablePart = priceStr.substring(0, firstDiff);
+                        changingPart = priceStr.substring(firstDiff);
+                    }
+                }
+            }
+
+            state.lastPrice = currentPrice;
+            state.lastPriceStr = priceStr;
+
+            state.priceEls.forEach(el => {
+                if (el) {
+                    if (changingPart && flashClass) {
+                        el.innerHTML = `$${stablePart}<span class="${flashClass}">${changingPart}</span>`;
+                    } else {
+                        el.textContent = `$${priceStr}`;
+                    }
+                }
+            });
+
+            state.changeEls.forEach(el => {
+                if (el) {
+                    el.textContent = `${isUp ? '+' : ''}${changeStr}%`;
+                    el.className = `ticker__value ${isUp ? 'ticker__value--up' : 'ticker__value--down'}`;
+                }
+            });
+        }
+
+        // Throttle updates to max once every 500ms per symbol
+        function processUpdate(symbol, priceValue, changeValue) {
+            const state = symbols[symbol];
+            if (!state) return;
+            
+            const now = Date.now();
+            if (now - state.lastUpdate >= 500) {
+                // Safe to update immediately
+                state.lastUpdate = now;
+                updateTickerUI(symbol, priceValue, changeValue);
+            } else {
+                // Too soon. Store latest data and schedule update.
+                state.pendingData = { priceValue, changeValue };
+                if (!state.timer) {
+                    state.timer = setTimeout(() => {
+                        state.lastUpdate = Date.now();
+                        updateTickerUI(symbol, state.pendingData.priceValue, state.pendingData.changeValue);
+                        state.timer = null;
+                        state.pendingData = null;
+                    }, 500 - (now - state.lastUpdate));
+                }
+            }
+        }
+
+        // Fetch initial data via REST API (Bybit V5)
+        async function fetchInitialData() {
+            try {
+                for (const symbol of Object.keys(symbols)) {
+                    const response = await fetch(`https://api.bybit.com/v5/market/tickers?category=spot&symbol=${symbol}`);
+                    const data = await response.json();
+                    if (data.result && data.result.list && data.result.list[0]) {
+                        const tickerData = data.result.list[0];
+                        processUpdate(symbol, tickerData.lastPrice, tickerData.price24hPcnt);
+                    }
+                }
+            } catch (err) {
+                console.error('Error fetching initial Bybit data:', err);
+            }
+        }
+
+        function connect() {
+            socket = new WebSocket('wss://stream.bybit.com/v5/public/spot');
+
+            socket.onopen = () => {
+                console.log('Bybit WebSocket Connected');
+                
+                // Subscribe to tickers
+                const subMsg = {
+                    "op": "subscribe",
+                    "args": Object.keys(symbols).map(s => `tickers.${s}`)
+                };
+                socket.send(JSON.stringify(subMsg));
+
+                // Bybit heartbeat: send "ping" every 20s
+                const pingInterval = setInterval(() => {
+                    if (socket.readyState === WebSocket.OPEN) {
+                        socket.send(JSON.stringify({ "op": "ping" }));
+                    } else {
+                        clearInterval(pingInterval);
+                    }
+                }, 20000);
+            };
+
+            socket.onmessage = (event) => {
+                try {
+                    const response = JSON.parse(event.data);
+                    
+                    if (response.topic && response.topic.startsWith('tickers.') && response.data) {
+                        const symbol = response.topic.replace('tickers.', '');
+                        const tickerData = response.data;
+                        processUpdate(symbol, tickerData.lastPrice, tickerData.price24hPcnt);
+                    }
+                } catch (e) {
+                    // Ignore non-JSON or malformed messages
+                }
+            };
+
+            socket.onclose = () => {
+                console.log('Bybit WebSocket Disconnected. Reconnecting...');
+                clearTimeout(reconnectTimeout);
+                reconnectTimeout = setTimeout(connect, 5000);
+            };
+
+            socket.onerror = (err) => {
+                console.error('Bybit WebSocket Error:', err);
+                socket.close();
+            };
+        }
+
+        fetchInitialData();
+        connect();
+    }
+
+    initBybitTicker();
 });
