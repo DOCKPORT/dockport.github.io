@@ -1,6 +1,6 @@
 const TALLYBOOK_VERSION = {
-    version: "1.0.3",
-    downloadUrl: "https://github.com/dockport/TallyBook/releases/download/1.0.3/TallyBook-x86_64.AppImage",
+    version: "1.1.0",
+    downloadUrl: "https://github.com/dockport/TallyBook/releases/download/1.1.0/TallyBook-x86_64.AppImage",
     filename: "TallyBook-x86_64.AppImage"
 };
 
