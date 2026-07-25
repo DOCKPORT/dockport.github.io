@@ -643,8 +643,335 @@ h1 {
     }
 }
 
+/* ===========================================
+   GitHub Section — Terminal Industrial Style
+   =========================================== */
+
+#github {
+    padding: 1.5rem 0 7rem;
+    position: relative;
+    text-align: center;
+}
+
+#github::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 900px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border-color), transparent);
+}
+
+.gh-heading-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    margin: 0 auto 2rem;
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.gh-heading-link:hover {
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.gh-heading-link svg {
+    display: block;
+}
+
+/* --- Contribution Graph --- */
+
+.gh-contributions-wrap {
+    margin-bottom: 3.5rem;
+    padding: 1.5rem 1.5rem 1.25rem;
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    transition: var(--transition);
+    text-align: left;
+}
+
+.gh-contrib-loading {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    opacity: 0.6;
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.gh-contrib-error {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    color: #ff6b6b;
+    text-align: center;
+    padding: 2rem 0;
+}
+
+/* Contribution Graph Grid */
+.gh-contrib-grid {
+    display: grid;
+    grid-template-rows: repeat(7, 1fr);
+    grid-auto-flow: column;
+    gap: 3px;
+    padding: 0.25rem 0;
+}
+
+.gh-contrib-cell {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.04);
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.gh-contrib-cell:hover {
+    transform: scale(1.4);
+    border-radius: 2px;
+    outline: 1px solid rgba(0, 196, 180, 0.3);
+    z-index: 2;
+}
+
+.gh-contrib-cell.level-1 { background: rgba(0, 196, 180, 0.15); }
+.gh-contrib-cell.level-2 { background: rgba(0, 196, 180, 0.35); }
+.gh-contrib-cell.level-3 { background: rgba(0, 196, 180, 0.55); }
+.gh-contrib-cell.level-4 { background: rgba(0, 196, 180, 0.80); }
+
+/* Graph legend */
+.gh-contrib-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.gh-contrib-legend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.gh-contrib-legend .legend-label {
+    font-size: 0.75rem;
+    margin-right: 4px;
+}
+
+.gh-contrib-legend .legend-cell {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.gh-contrib-legend .legend-cell.l1 { background: rgba(0, 196, 180, 0.15); }
+.gh-contrib-legend .legend-cell.l2 { background: rgba(0, 196, 180, 0.35); }
+.gh-contrib-legend .legend-cell.l3 { background: rgba(0, 196, 180, 0.55); }
+.gh-contrib-legend .legend-cell.l4 { background: rgba(0, 196, 180, 0.80); }
+
+/* --- Language Breakdown --- */
+
+.gh-languages-wrap {
+    margin-bottom: 2.5rem;
+    padding: 1.25rem 1.5rem;
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    text-align: left;
+}
+
+.gh-lang-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.3rem 0;
+}
+
+.gh-lang-name {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    width: 5rem;
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.gh-lang-bar-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.gh-lang-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+
+.gh-lang-pct {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.5);
+    width: 3.5rem;
+    flex-shrink: 0;
+    text-align: right;
+}
+
+/* --- Repo Cards --- */
+
+.gh-repos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.gh-repo-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    text-decoration: none;
+    transition: var(--transition);
+    position: relative;
+    text-align: left;
+}
+
+.gh-repo-card:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(0, 196, 180, 0.2);
+    transform: translateX(3px);
+}
+
+.gh-repo-card:active {
+    transform: translateX(1px);
+}
+
+.gh-repo-marker {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.75rem;
+    color: var(--primary-teal);
+    opacity: 0.5;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+    user-select: none;
+}
+
+.gh-repo-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.gh-repo-name {
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.02em;
+    transition: color 0.2s ease;
+}
+
+.gh-repo-card:hover .gh-repo-name {
+    color: var(--primary-teal);
+}
+
+.gh-repo-desc {
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+    margin-bottom: 0.4rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-weight: 300;
+}
+
+.gh-repo-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.gh-repo-lang {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.gh-lang-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.gh-repo-pushed {
+    opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    #github {
+        padding: 0.75rem 0 4rem;
+    }
+
+    .gh-heading-link svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .gh-contributions-wrap {
+        padding: 1rem;
+        overflow-x: auto;
+    }
+
+    .gh-contrib-grid {
+        min-width: 620px;
+    }
+
+    .gh-contrib-footer {
+        flex-direction: column;
+        gap: 0.4rem;
+        align-items: flex-start;
+    }
+
+    .gh-repo-card {
+        padding: 0.75rem 0.9rem;
+    }
+
+    .gh-repo-name {
+        font-size: 0.9rem;
+    }
+
+    .gh-repo-desc {
+        font-size: 0.85rem;
+    }
+
+    .gh-repo-meta {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}
+
 @media (min-width: 768px) and (max-width: 1200px) {
     .specialties-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2x2 on tablets */
+        grid-template-columns: repeat(2, 1fr);
     }
 }

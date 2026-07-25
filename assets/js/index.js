@@ -46,68 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Custom transition for TallyBook link
-    const tallybookLink = document.querySelector('.btn-orange-large');
-    if (tallybookLink) {
-        tallybookLink.addEventListener('click', function (e) {
-            e.preventDefault();
-            const url = this.getAttribute('href');
-            document.body.classList.add('page-exit');
-            setTimeout(() => {
-                window.location.href = url;
-            }, 450);
-        });
-    }
-
-    // Handle Contact Dropdown Toggle
-    const dropdownWrapper = document.querySelector('.nav-dropdown-wrapper');
-    const dropdown = document.querySelector('.nav-dropdown');
-    
-    if (dropdownWrapper && dropdown) {
-        dropdownWrapper.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dropdown.classList.toggle('show');
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', () => {
-            dropdown.classList.remove('show');
-        });
-    }
-
-    const copyBtn = document.getElementById('copy-email-btn');
-    const emailText = document.getElementById('contact-email');
-    
-    if (copyBtn && emailText) {
-        const copyIcon = copyBtn.querySelector('.copy-icon');
-        const checkIcon = copyBtn.querySelector('.check-icon');
-        
-        copyBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const email = emailText.textContent;
-            navigator.clipboard.writeText(email).then(() => {
-                copyIcon.style.display = 'none';
-                checkIcon.style.display = 'block';
-                copyBtn.classList.add('copied');
-                
-                setTimeout(() => {
-                    copyIcon.style.display = 'block';
-                    checkIcon.style.display = 'none';
-                    copyBtn.classList.remove('copied');
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-            });
-        });
-    }
-
-
     // --- Bybit WebSocket Ticker ---
     function initBybitTicker() {
         const ticker = document.getElementById('bybit-ticker');
         if (!ticker) return;
 
-        // State management for multiple symbols
         const symbols = {
             'BTCUSDT': {
                 priceEls: ticker.querySelectorAll('.btc-price'),
@@ -149,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let socket;
         let reconnectTimeout;
 
-        // Function to update the DOM for a specific symbol
         function updateTickerUI(symbol, priceValue, changeValue) {
             const state = symbols[symbol];
             if (!state) return;
@@ -157,12 +99,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentPrice = parseFloat(priceValue);
             const priceStr = currentPrice.toLocaleString(undefined, { 
                 minimumFractionDigits: 2, 
-                maximumFractionDigits: symbol === 'XAUTUSDT' ? 2 : 2 
+                maximumFractionDigits: 2 
             });
             const changeStr = (parseFloat(changeValue) * 100).toFixed(2);
             const isUp = parseFloat(changeValue) >= 0;
 
-            // Determine flash direction and parts
             let flashClass = '';
             let stablePart = priceStr;
             let changingPart = '';
@@ -171,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (currentPrice > state.lastPrice) flashClass = 'flash-up';
                 else if (currentPrice < state.lastPrice) flashClass = 'flash-down';
 
-                // Find the first character that changed
                 if (state.lastPriceStr.length !== priceStr.length) {
                     stablePart = '';
                     changingPart = priceStr;
@@ -211,18 +151,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Throttle updates to max once every 500ms per symbol
         function processUpdate(symbol, priceValue, changeValue) {
             const state = symbols[symbol];
             if (!state) return;
             
             const now = Date.now();
             if (now - state.lastUpdate >= 500) {
-                // Safe to update immediately
                 state.lastUpdate = now;
                 updateTickerUI(symbol, priceValue, changeValue);
             } else {
-                // Too soon. Store latest data and schedule update.
                 state.pendingData = { priceValue, changeValue };
                 if (!state.timer) {
                     state.timer = setTimeout(() => {
@@ -235,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Fetch initial data via REST API (Bybit V5)
         async function fetchInitialData() {
             try {
                 for (const symbol of Object.keys(symbols)) {
@@ -256,15 +192,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             socket.onopen = () => {
                 console.log('Bybit WebSocket Connected');
-                
-                // Subscribe to tickers
                 const subMsg = {
                     "op": "subscribe",
                     "args": Object.keys(symbols).map(s => `tickers.${s}`)
                 };
                 socket.send(JSON.stringify(subMsg));
 
-                // Bybit heartbeat: send "ping" every 20s
                 const pingInterval = setInterval(() => {
                     if (socket.readyState === WebSocket.OPEN) {
                         socket.send(JSON.stringify({ "op": "ping" }));
@@ -277,15 +210,12 @@ document.addEventListener('DOMContentLoaded', () => {
             socket.onmessage = (event) => {
                 try {
                     const response = JSON.parse(event.data);
-                    
                     if (response.topic && response.topic.startsWith('tickers.') && response.data) {
                         const symbol = response.topic.replace('tickers.', '');
                         const tickerData = response.data;
                         processUpdate(symbol, tickerData.lastPrice, tickerData.price24hPcnt);
                     }
-                } catch (e) {
-                    // Ignore non-JSON or malformed messages
-                }
+                } catch (e) {}
             };
 
             socket.onclose = () => {
@@ -305,4 +235,294 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     initBybitTicker();
+
+    // ========================================
+    // GitHub API — Repositories & Contributions
+    // ========================================
+
+    const GITHUB_USER = 'DOCKPORT';
+
+    // Language color mapping for dots
+    const LANG_COLORS = {
+        'Python': '#3572A5',
+        'JavaScript': '#f1e05a',
+        'TypeScript': '#3178c6',
+        'HTML': '#e34c26',
+        'CSS': '#563d7c',
+        'Shell': '#89e051',
+        'C': '#555555',
+        'C++': '#f34b7d',
+        'Java': '#b07219',
+        'Go': '#00ADD8',
+        'Rust': '#dea584',
+        'Ruby': '#701516',
+        'PHP': '#4F5D95',
+        'Swift': '#F05138',
+        'Kotlin': '#A97BFF',
+        'Dart': '#00B4AB',
+        'Lua': '#000080',
+        'Perl': '#0298c3',
+        'Scala': '#c22d40',
+        'Elixir': '#6e4a7e',
+        'Haskell': '#5e5086',
+        'Clojure': '#db5855',
+        'Vue': '#41b883',
+        'Svelte': '#ff3e00',
+        'Jupyter Notebook': '#DA5B0B',
+        'Makefile': '#427819',
+        'Dockerfile': '#384d54',
+        'TeX': '#3D6117',
+    };
+
+    // Fetch public repos, filter out forks, sort by updated_at descending
+    async function fetchRepos() {
+        const container = document.getElementById('gh-repos');
+        if (!container) return;
+
+        try {
+            const response = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=100&type=public`);
+            if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
+            const repos = await response.json();
+
+            // Filter out forks
+            const nonForkRepos = repos.filter(repo => !repo.fork);
+
+            // Sort by most recent push date
+            nonForkRepos.sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at));
+
+            if (nonForkRepos.length === 0) {
+                container.innerHTML = '<div class="gh-contrib-error">no public repositories found</div>';
+                return;
+            }
+
+            // Build repo cards
+            container.innerHTML = '';
+            nonForkRepos.forEach(repo => {
+                const pushedDate = repo.pushed_at ? timeAgo(new Date(repo.pushed_at)) : '';
+                const langColor = LANG_COLORS[repo.language] || '#8b8b8b';
+
+                const card = document.createElement('a');
+                card.href = repo.html_url;
+                card.target = '_blank';
+                card.rel = 'noopener noreferrer';
+                card.className = 'gh-repo-card';
+
+                card.innerHTML = `
+                    <span class="gh-repo-marker">◆</span>
+                    <div class="gh-repo-body">
+                        <div class="gh-repo-name">${escapeHtml(repo.name)}</div>
+                        ${repo.description ? `<div class="gh-repo-desc">${escapeHtml(repo.description)}</div>` : ''}
+                        <div class="gh-repo-meta">
+                            ${repo.language ? `
+                                <span class="gh-repo-lang">
+                                    <span class="gh-lang-dot" style="background: ${langColor}"></span>
+                                    ${repo.language}
+                                </span>
+                            ` : ''}
+                            ${pushedDate ? `<span class="gh-repo-pushed">pushed ${pushedDate}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        } catch (err) {
+            console.error('Failed to fetch repos:', err);
+            container.innerHTML = `<div class="gh-contrib-error">failed to load repositories</div>`;
+        }
+    }
+
+    // Fetch contribution graph data and render as grid
+    async function fetchContributions() {
+        const container = document.getElementById('gh-contributions');
+        if (!container) return;
+
+        try {
+            const response = await fetch(`https://github-contributions-api.deno.dev/${GITHUB_USER}.json`);
+            if (!response.ok) throw new Error(`Contributions API error: ${response.status}`);
+            const data = await response.json();
+
+            // The API returns: { contributions: [ [7-day-week], [7-day-week], ... ], totalContributions: N }
+            const weeks = data.contributions;
+            if (!weeks || weeks.length === 0) {
+                container.innerHTML = '<div class="gh-contrib-error">no contribution data available</div>';
+                return;
+            }
+
+            // Render the graph — the API already returns weeks structured as columns of 7 days
+            const grid = document.createElement('div');
+            grid.className = 'gh-contrib-grid';
+
+            let maxCount = 0;
+            let totalContribs = 0;
+
+            // Find max contribution count for level scaling
+            weeks.forEach(week => {
+                week.forEach(day => {
+                    if (day.contributionCount > maxCount) maxCount = day.contributionCount;
+                    totalContribs += day.contributionCount;
+                });
+            });
+
+            // Create cells week-by-week. Each week is a column (7 rows).
+            // grid-auto-flow: column means we add cells in column-major order.
+            weeks.forEach(week => {
+                week.forEach(day => {
+                    const count = day.contributionCount || 0;
+                    let level = 0;
+                    if (count > 0 && maxCount > 0) {
+                        const ratio = count / maxCount;
+                        if (ratio > 0.75) level = 4;
+                        else if (ratio > 0.5) level = 3;
+                        else if (ratio > 0.25) level = 2;
+                        else level = 1;
+                    }
+
+                    const cell = document.createElement('div');
+                    cell.className = `gh-contrib-cell level-${level}`;
+                    cell.title = `${count} contribution${count !== 1 ? 's' : ''} on ${day.date}`;
+                    grid.appendChild(cell);
+                });
+            });
+
+            // Build footer with legend
+            const footer = document.createElement('div');
+            footer.className = 'gh-contrib-footer';
+
+            const totalLabel = document.createElement('span');
+            totalLabel.textContent = `${totalContribs.toLocaleString()} contributions in the last year`;
+
+            const legend = document.createElement('div');
+            legend.className = 'gh-contrib-legend';
+            legend.innerHTML = `
+                <span class="legend-label">Less</span>
+                <span class="legend-cell"></span>
+                <span class="legend-cell l1"></span>
+                <span class="legend-cell l2"></span>
+                <span class="legend-cell l3"></span>
+                <span class="legend-cell l4"></span>
+                <span class="legend-label">More</span>
+            `;
+
+            footer.appendChild(totalLabel);
+            footer.appendChild(legend);
+
+            container.innerHTML = '';
+            container.appendChild(grid);
+            container.appendChild(footer);
+
+        } catch (err) {
+            console.error('Failed to fetch contributions:', err);
+            container.innerHTML = `<div class="gh-contrib-error">failed to load contribution data</div>`;
+        }
+    }
+
+    // Utility: relative time string
+    function timeAgo(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffSec = Math.floor(diffMs / 1000);
+        const diffMin = Math.floor(diffSec / 60);
+        const diffHours = Math.floor(diffMin / 60);
+        const diffDays = Math.floor(diffHours / 24);
+        const diffWeeks = Math.floor(diffDays / 7);
+        const diffMonths = Math.floor(diffDays / 30);
+
+        if (diffDays === 0) {
+            if (diffHours === 0) return diffMin <= 1 ? 'just now' : `${diffMin} minutes ago`;
+            return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+        }
+        if (diffDays === 1) return 'yesterday';
+        if (diffDays < 7) return `${diffDays} days ago`;
+        if (diffWeeks < 5) return `${diffWeeks} week${diffWeeks !== 1 ? 's' : ''} ago`;
+        return `${diffMonths} month${diffMonths !== 1 ? 's' : ''} ago`;
+    }
+
+    // Utility: escape HTML to prevent XSS
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Fetch language stats across all public non-fork repos
+    async function fetchLanguageStats() {
+        const container = document.getElementById('gh-languages');
+        if (!container) return;
+
+        try {
+            // First get the list of non-fork repos
+            const repoRes = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=100&type=public`);
+            if (!repoRes.ok) throw new Error(`GitHub API error: ${repoRes.status}`);
+            const repos = await repoRes.json();
+            const nonForkRepos = repos.filter(repo => !repo.fork);
+
+            if (nonForkRepos.length === 0) {
+                container.innerHTML = '<div class="gh-contrib-error">no repositories to analyze</div>';
+                return;
+            }
+
+            // Fetch languages for each repo (in parallel but limited to avoid rate limiting)
+            const allLangBytes = {};  // language -> total bytes
+
+            // Process in batches of 5 to avoid hitting rate limits
+            const batchSize = 5;
+            for (let i = 0; i < nonForkRepos.length; i += batchSize) {
+                const batch = nonForkRepos.slice(i, i + batchSize);
+                const results = await Promise.all(
+                    batch.map(repo =>
+                        fetch(`https://api.github.com/repos/${GITHUB_USER}/${repo.name}/languages`)
+                            .then(r => r.ok ? r.json() : {})
+                            .catch(() => ({}))
+                    )
+                );
+
+                results.forEach(langData => {
+                    Object.entries(langData).forEach(([lang, bytes]) => {
+                        allLangBytes[lang] = (allLangBytes[lang] || 0) + bytes;
+                    });
+                });
+            }
+
+            // Calculate total bytes and percentages
+            const totalBytes = Object.values(allLangBytes).reduce((sum, b) => sum + b, 0);
+            if (totalBytes === 0) {
+                container.innerHTML = '<div class="gh-contrib-error">no language data available</div>';
+                return;
+            }
+
+            // Sort languages by bytes descending
+            const sortedLangs = Object.entries(allLangBytes)
+                .sort(([, a], [, b]) => b - a);
+
+            // Render
+            container.innerHTML = '';
+            sortedLangs.forEach(([lang, bytes]) => {
+                const pct = (bytes / totalBytes) * 100;
+                const color = LANG_COLORS[lang] || '#8b8b8b';
+
+                const row = document.createElement('div');
+                row.className = 'gh-lang-row';
+
+                row.innerHTML = `
+                    <span class="gh-lang-name">${escapeHtml(lang)}</span>
+                    <div class="gh-lang-bar-track">
+                        <div class="gh-lang-bar-fill" style="width: ${pct}%; background: ${color}"></div>
+                    </div>
+                    <span class="gh-lang-pct">${pct.toFixed(1)}%</span>
+                `;
+
+                container.appendChild(row);
+            });
+
+        } catch (err) {
+            console.error('Failed to fetch language stats:', err);
+            container.innerHTML = `<div class="gh-contrib-error">failed to load language data</div>`;
+        }
+    }
+
+    // Initialize GitHub section
+    fetchRepos();
+    fetchContributions();
+    fetchLanguageStats();
 });
