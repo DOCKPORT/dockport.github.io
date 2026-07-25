@@ -737,10 +737,10 @@ h1 {
     z-index: 2;
 }
 
-.gh-contrib-cell.level-1 { background: rgba(0, 196, 180, 0.15); }
-.gh-contrib-cell.level-2 { background: rgba(0, 196, 180, 0.35); }
-.gh-contrib-cell.level-3 { background: rgba(0, 196, 180, 0.55); }
-.gh-contrib-cell.level-4 { background: rgba(0, 196, 180, 0.80); }
+.gh-contrib-cell.level-1 { background: rgba(0, 196, 180, 0.25); }
+.gh-contrib-cell.level-2 { background: rgba(0, 196, 180, 0.50); }
+.gh-contrib-cell.level-3 { background: rgba(0, 196, 180, 0.75); }
+.gh-contrib-cell.level-4 { background: rgba(0, 196, 180, 1.0); }
 
 /* Graph legend */
 .gh-contrib-footer {
@@ -771,10 +771,10 @@ h1 {
     background: rgba(255, 255, 255, 0.04);
 }
 
-.gh-contrib-legend .legend-cell.l1 { background: rgba(0, 196, 180, 0.15); }
-.gh-contrib-legend .legend-cell.l2 { background: rgba(0, 196, 180, 0.35); }
-.gh-contrib-legend .legend-cell.l3 { background: rgba(0, 196, 180, 0.55); }
-.gh-contrib-legend .legend-cell.l4 { background: rgba(0, 196, 180, 0.80); }
+.gh-contrib-legend .legend-cell.l1 { background: rgba(0, 196, 180, 0.25); }
+.gh-contrib-legend .legend-cell.l2 { background: rgba(0, 196, 180, 0.50); }
+.gh-contrib-legend .legend-cell.l3 { background: rgba(0, 196, 180, 0.75); }
+.gh-contrib-legend .legend-cell.l4 { background: rgba(0, 196, 180, 1.0); }
 
 /* --- Language Breakdown --- */
 
