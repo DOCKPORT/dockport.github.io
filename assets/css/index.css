@@ -1,0 +1,650 @@
+:root {
+    --bg-color: #0d0d0d;
+    /* Transitioned from pure black to a refined deep grey */
+    --text-primary: #e0e0e0;
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --primary-teal: #00c4b4;
+    --secondary-teal: #00786e;
+    --border-color: rgba(255, 255, 255, 0.08);
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --teal-glow: rgba(0, 196, 180, 0.3);
+    --glass-grad: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --primary-orange: #ff9500;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
+    opacity: 1;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    animation: pageEnter 0.5s ease-out;
+}
+
+body.page-exit {
+    opacity: 0;
+    transform: scale(0.98);
+}
+
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: scale(1.01);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Header & Navigation */
+header {
+    position: absolute; /* Changed from fixed to scroll away with the page */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-color); /* Matches the main page background */
+}
+
+.nav-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.email-subtext {
+    color: #dddddd;
+    font-size: 0.95rem;
+    font-family: 'Fira Code', monospace;
+    margin-top: 0.15rem;
+    opacity: 1;
+}
+
+.logo-link,
+.footer-brand-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: var(--transition);
+}
+
+.logo-link:hover,
+.footer-brand-link:hover {
+    filter: brightness(1.2);
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    /* Strategic gap for clarity */
+    text-align: center;
+}
+
+.logo img {
+    height: 90px;
+    /* Reduced from 110px for better vertical space */
+    width: auto;
+}
+
+.logo-text {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--primary-teal);
+    letter-spacing: -0.04em;
+    margin-top: -0.2rem;
+    /* More breathing room */
+}
+
+/* nav-links removed in favor of side-buttons */
+
+/* Hero Section */
+#hero {
+    min-height: 40vh; /* Reduced for tighter vertical flow between segments */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 13rem; /* Safe clearance for fixed header */
+}
+
+footer {
+    width: 100% !important;
+    z-index: 10 !important;
+    padding: 2rem 0 !important;
+    text-align: center;
+}
+
+footer p {
+    color: #888888 !important;
+    font-weight: 300 !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.15em !important;
+    margin: 0 !important;
+}
+
+/* Glow orbs removed for direct binary visibility */
+
+.hero-content {
+    text-align: center;
+    max-width: 1100px;
+    margin-top: 0;
+    position: relative;
+    z-index: 10;
+}
+
+h1 {
+    font-size: clamp(2.8rem, 8vw, 5rem);
+    font-weight: 600;
+    line-height: 1.1;
+    margin-bottom: 2.5rem;
+    letter-spacing: -0.04em;
+}
+
+.white-text-accent {
+    color: #e0e0e0;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.04em;
+}
+
+.teal-text {
+    color: var(--primary-teal);
+}
+
+.fira-code {
+    font-family: 'Fira Code', monospace;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.text-gradient {
+    /* More robust mobile support for background clips */
+    color: var(--primary-teal); /* Consistent with specific color request */
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(110deg, var(--secondary-teal) 0%, var(--primary-teal) 40%, var(--primary-teal) 100%);
+    /* Removed #00ffeb for strict #00c4b4 adherence */
+    display: inline-block;
+    vertical-align: top;
+    line-height: 1.1;
+}
+
+.grey-gradient {
+    background: linear-gradient(to right, #808080, #c0c0c0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+#hero p {
+    font-size: 1.25rem;
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--text-primary);
+    font-weight: 300;
+}
+
+.hero-cta {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+/* Ticker Styles */
+.ticker-wrap {
+    width: 100%;
+    overflow: hidden;
+    height: 3.5rem;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+.ticker {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker 50s linear infinite;
+}
+
+.ticker__item {
+    display: inline-block;
+    padding: 0 2rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+}
+
+.ticker__value {
+    color: var(--text-primary);
+    margin-left: 0.5rem;
+}
+
+.ticker__value--up {
+    color: var(--primary-teal);
+}
+
+.ticker__value--down {
+    color: #ff4d4d;
+}
+
+.flash-up {
+    animation: flashGreen 0.8s steps(1);
+}
+
+.flash-down {
+    animation: flashRed 0.8s steps(1);
+}
+
+@keyframes flashGreen {
+    0% { color: #00ff88; }
+    100% { color: var(--text-primary); }
+}
+
+@keyframes flashRed {
+    0% { color: #ff4d4d; }
+    100% { color: var(--text-primary); }
+}
+
+@keyframes ticker {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.btn-primary-large {
+    background: var(--primary-teal);
+    color: var(--bg-color);
+    padding: 1rem 2.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: var(--transition);
+    box-shadow: 0 10px 30px var(--teal-glow);
+}
+
+.btn-primary-large:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px var(--teal-glow);
+    filter: brightness(1.1);
+}
+
+.btn-secondary-large {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    padding: 1rem 2.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+}
+
+.btn-secondary-large:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary-teal);
+    color: var(--primary-teal);
+}
+
+.hero-cta-orange {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    z-index: 20;
+}
+
+.btn-orange-large {
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    color: var(--primary-orange);
+    padding: 0.5rem 1.8rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    border: 2px solid var(--primary-orange);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-family: 'Fira Code', monospace;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-orange-large::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 75%;
+    height: 200%;
+    background: linear-gradient(to right, transparent 0%, rgba(255, 149, 0, 0.05) 25%, rgba(255, 149, 0, 0.35) 50%, rgba(255, 149, 0, 0.05) 75%, transparent 100%);
+    transform: rotate(30deg);
+    transition: none;
+    pointer-events: none;
+}
+
+.btn-orange-large:hover::after {
+    left: 140%;
+    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+
+
+
+/* Specialties Section */
+#specialties {
+    padding: 0.5rem 1rem 6rem;
+    /* Balanced top padding for better flow */
+    position: relative;
+    z-index: 5;
+}
+
+.section-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.85); /* Matched with card subtext */
+    margin-bottom: 2rem;
+    letter-spacing: -0.04em;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: var(--primary-teal);
+    margin: 1rem auto 0.5rem;
+    border-radius: 2px;
+}
+
+.specialties-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.specialty-item {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    /* Slightly reduced padding to accommodate image */
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    overflow: hidden;
+    /* For rounded image corners at top if needed */
+}
+
+.specialty-image {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    object-position: center 35%;
+    border-radius: 12px;
+    margin-top: auto; /* Aligns all images at the bottom of the card */
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transform: scale(1.05); /* Slightly zoomed for focus without losing the wider environment */
+    transform-origin: center;
+}
+
+
+.specialty-number {
+    font-family: 'Fira Code', monospace;
+    color: var(--primary-teal);
+    font-size: 1.65rem; /* Matches .specialty-name */
+    font-weight: 600;  /* Matches .specialty-name */
+    margin-right: 0.6rem;
+    display: inline-block;
+}
+
+.specialty-name {
+    font-size: 1.65rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+    min-height: 4.5rem; /* Synchronizes the start position of subtext */
+    display: flex;
+    align-items: flex-start;
+}
+
+.specialty-description {
+    font-size: 1.15rem;
+    color: rgba(255, 255, 255, 0.85);
+    /* Lightened for better visibility */
+    line-height: 1.7;
+    font-weight: 300;
+    margin-top: 0.6rem;
+    margin-bottom: 2.5rem;
+}
+
+
+/* Animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.8s forwards;
+}
+
+.fade-in-delayed {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.8s 0.3s forwards;
+}
+
+.ticker-fade {
+    opacity: 0;
+    animation: tickerTapeFade 3s ease-in-out 1s forwards;
+}
+
+@keyframes tickerTapeFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 1440px) {
+    .logo img {
+        height: 80px;
+    }
+    .logo-text {
+        font-size: 1.8rem;
+    }
+    #hero {
+        padding-top: 12rem;
+    }
+}
+
+@media (max-width: 968px) {
+    header {
+        padding: 0.4rem 0;
+    }
+
+    .nav-balanced {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding-top: 0.5rem;
+    }
+
+    .nav-left,
+    .nav-right {
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    .logo img {
+        height: 54px;
+        /* Scaled down further for mobile */
+    }
+
+    .logo-text {
+        font-size: 1.5rem;
+        /* Scaled down further for mobile */
+        margin-top: -0.4rem;
+    }
+
+    .nav-centered {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    #hero {
+        padding-top: 10rem; /* Balanced clearance for mobile header */
+        height: auto;
+        min-height: 40vh; /* Reduced from 100vh */
+        padding-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .hero-content {
+        margin-top: 0; /* Reset for mobile */
+        padding: 0 1.5rem;
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 2.2rem;
+        /* Slightly larger for a punchier mobile presence */
+        margin-bottom: 1.2rem;
+    }
+
+    #hero p {
+        font-size: 1.1rem;
+        margin-bottom: 1.8rem;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .btn-primary-large,
+    .btn-secondary-large,
+    .btn-orange-large {
+        width: 100%;
+        text-align: center;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    .specialties-grid {
+        grid-template-columns: 1fr; /* Stacked on mobile */
+        gap: 1.5rem;
+    }
+
+    #specialties {
+        padding-top: 0.5rem; /* Reduced for tighter flow */
+    }
+
+    /* Static Ticker for Mobile */
+    .ticker-wrap {
+        height: auto;
+        mask-image: none;
+        padding: 0.5rem 1.5rem;
+    }
+
+    .ticker {
+        animation: none;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.3rem 1rem;
+        justify-content: center;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .ticker__item {
+        padding: 0.3rem 0;
+        font-size: 0.85rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr 0.8fr;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .ticker__item .ticker__value {
+        margin-left: 0;
+        text-align: right;
+    }
+
+    .ticker__item:nth-child(n+6) {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1200px) {
+    .specialties-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2x2 on tablets */
+    }
+}
