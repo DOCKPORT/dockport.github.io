@@ -274,63 +274,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'TeX': '#3D6117',
     };
 
-    // Fetch public repos, filter out forks, sort by updated_at descending
-    async function fetchRepos() {
-        const container = document.getElementById('gh-repos');
-        if (!container) return;
-
-        try {
-            const response = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=100&type=public`);
-            if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
-            const repos = await response.json();
-
-            // Filter out forks
-            const nonForkRepos = repos.filter(repo => !repo.fork);
-
-            // Sort by most recent push date
-            nonForkRepos.sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at));
-
-            if (nonForkRepos.length === 0) {
-                container.innerHTML = '<div class="gh-contrib-error">no public repositories found</div>';
-                return;
-            }
-
-            // Build repo cards
-            container.innerHTML = '';
-            nonForkRepos.forEach(repo => {
-                const pushedDate = repo.pushed_at ? timeAgo(new Date(repo.pushed_at)) : '';
-                const langColor = LANG_COLORS[repo.language] || '#8b8b8b';
-
-                const card = document.createElement('a');
-                card.href = repo.html_url;
-                card.target = '_blank';
-                card.rel = 'noopener noreferrer';
-                card.className = 'gh-repo-card';
-
-                card.innerHTML = `
-                    <span class="gh-repo-marker">◆</span>
-                    <div class="gh-repo-body">
-                        <div class="gh-repo-name">${escapeHtml(repo.name)}</div>
-                        ${repo.description ? `<div class="gh-repo-desc">${escapeHtml(repo.description)}</div>` : ''}
-                        <div class="gh-repo-meta">
-                            ${repo.language ? `
-                                <span class="gh-repo-lang">
-                                    <span class="gh-lang-dot" style="background: ${langColor}"></span>
-                                    ${repo.language}
-                                </span>
-                            ` : ''}
-                            ${pushedDate ? `<span class="gh-repo-pushed">pushed ${pushedDate}</span>` : ''}
-                        </div>
-                    </div>
-                `;
-
-                container.appendChild(card);
-            });
-        } catch (err) {
-            console.error('Failed to fetch repos:', err);
-            container.innerHTML = `<div class="gh-contrib-error">failed to load repositories</div>`;
-        }
-    }
 
     // Fetch contribution graph data and render as grid
     async function fetchContributions() {
@@ -445,84 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return div.innerHTML;
     }
 
-    // Fetch language stats across all public non-fork repos
-    async function fetchLanguageStats() {
-        const container = document.getElementById('gh-languages');
-        if (!container) return;
-
-        try {
-            // First get the list of non-fork repos
-            const repoRes = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=100&type=public`);
-            if (!repoRes.ok) throw new Error(`GitHub API error: ${repoRes.status}`);
-            const repos = await repoRes.json();
-            const nonForkRepos = repos.filter(repo => !repo.fork);
-
-            if (nonForkRepos.length === 0) {
-                container.innerHTML = '<div class="gh-contrib-error">no repositories to analyze</div>';
-                return;
-            }
-
-            // Fetch languages for each repo (in parallel but limited to avoid rate limiting)
-            const allLangBytes = {};  // language -> total bytes
-
-            // Process in batches of 5 to avoid hitting rate limits
-            const batchSize = 5;
-            for (let i = 0; i < nonForkRepos.length; i += batchSize) {
-                const batch = nonForkRepos.slice(i, i + batchSize);
-                const results = await Promise.all(
-                    batch.map(repo =>
-                        fetch(`https://api.github.com/repos/${GITHUB_USER}/${repo.name}/languages`)
-                            .then(r => r.ok ? r.json() : {})
-                            .catch(() => ({}))
-                    )
-                );
-
-                results.forEach(langData => {
-                    Object.entries(langData).forEach(([lang, bytes]) => {
-                        allLangBytes[lang] = (allLangBytes[lang] || 0) + bytes;
-                    });
-                });
-            }
-
-            // Calculate total bytes and percentages
-            const totalBytes = Object.values(allLangBytes).reduce((sum, b) => sum + b, 0);
-            if (totalBytes === 0) {
-                container.innerHTML = '<div class="gh-contrib-error">no language data available</div>';
-                return;
-            }
-
-            // Sort languages by bytes descending
-            const sortedLangs = Object.entries(allLangBytes)
-                .sort(([, a], [, b]) => b - a);
-
-            // Render
-            container.innerHTML = '';
-            sortedLangs.forEach(([lang, bytes]) => {
-                const pct = (bytes / totalBytes) * 100;
-                const color = LANG_COLORS[lang] || '#8b8b8b';
-
-                const row = document.createElement('div');
-                row.className = 'gh-lang-row';
-
-                row.innerHTML = `
-                    <span class="gh-lang-name">${escapeHtml(lang)}</span>
-                    <div class="gh-lang-bar-track">
-                        <div class="gh-lang-bar-fill" style="width: ${pct}%; background: ${color}"></div>
-                    </div>
-                    <span class="gh-lang-pct">${pct.toFixed(1)}%</span>
-                `;
-
-                container.appendChild(row);
-            });
-
-        } catch (err) {
-            console.error('Failed to fetch language stats:', err);
-            container.innerHTML = `<div class="gh-contrib-error">failed to load language data</div>`;
-        }
-    }
 
     // Initialize GitHub section
-    fetchRepos();
     fetchContributions();
-    fetchLanguageStats();
 });
