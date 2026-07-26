@@ -1,3 +1,19 @@
+@font-face {
+    font-family: 'Geist Mono';
+    src: url('../geist-font/GeistMono/webfonts/GeistMono[wght].woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Geist Mono';
+    src: url('../geist-font/GeistMono/webfonts/GeistMono-Italic[wght].woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: italic;
+    font-display: swap;
+}
+
 :root {
     --bg-color: #0d0d0d;
     /* Transitioned from pure black to a refined deep grey */
@@ -22,7 +38,7 @@
 body {
     background-color: var(--bg-color);
     color: var(--text-primary);
-    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Geist Mono', monospace;
     line-height: 1.6;
     overflow-x: hidden;
     overflow-y: auto;
@@ -81,7 +97,7 @@ header {
 .email-subtext {
     color: #dddddd;
     font-size: 0.95rem;
-    font-family: 'Fira Code', monospace;
+    font-family: 'Geist Mono', monospace;
     margin-top: 0.15rem;
     opacity: 1;
 }
@@ -172,8 +188,9 @@ h1 {
 
 .white-text-accent {
     color: #e0e0e0;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Geist Mono', monospace;
     letter-spacing: -0.04em;
+    font-weight: 700;
 }
 
 .teal-text {
@@ -181,7 +198,7 @@ h1 {
 }
 
 .fira-code {
-    font-family: 'Fira Code', monospace;
+    font-family: 'Geist Mono', monospace;
     font-weight: 700;
     letter-spacing: -0.01em;
 }
@@ -247,7 +264,7 @@ h1 {
 .ticker__item {
     display: inline-block;
     padding: 0 2rem;
-    font-family: 'Fira Code', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 0.9rem;
     color: var(--text-muted);
     letter-spacing: 0.05em;
@@ -356,7 +373,7 @@ h1 {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-family: 'Fira Code', monospace;
+    font-family: 'Geist Mono', monospace;
     transition: color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -449,7 +466,7 @@ h1 {
 
 
 .specialty-number {
-    font-family: 'Fira Code', monospace;
+    font-family: 'Geist Mono', monospace;
     color: var(--primary-teal);
     font-size: 1.65rem; /* Matches .specialty-name */
     font-weight: 600;  /* Matches .specialty-name */
@@ -697,7 +714,7 @@ h1 {
 }
 
 .gh-contrib-loading {
-    font-family: 'Fira Code', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 0.85rem;
     color: var(--text-muted);
     opacity: 0.6;
@@ -706,7 +723,7 @@ h1 {
 }
 
 .gh-contrib-error {
-    font-family: 'Fira Code', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 0.85rem;
     color: #ff6b6b;
     text-align: center;
@@ -748,7 +765,7 @@ h1 {
     justify-content: space-between;
     align-items: center;
     margin-top: 0.75rem;
-    font-family: 'Fira Code', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.55);
 }
@@ -790,7 +807,7 @@ h1 {
 }
 
 .gh-readme-tagline {
-    font-family: 'Fira Code', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 1rem;
     color: rgba(255, 255, 255, 0.9);
     font-weight: 300;
@@ -809,7 +826,7 @@ h1 {
 }
 
 .gh-readme-heading {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Geist Mono', monospace;
     font-size: 1.2rem;
     font-weight: 500;
     color: var(--primary-teal);
@@ -824,7 +841,7 @@ h1 {
 }
 
 .gh-readme-list li {
-    font-family: 'Fira Code', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.78);
     padding: 0.3rem 0;
@@ -852,7 +869,7 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem 0;
-    font-family: 'Fira Code', monospace;
+    font-family: 'Geist Mono', monospace;
     font-size: 0.9rem;
 }
 
