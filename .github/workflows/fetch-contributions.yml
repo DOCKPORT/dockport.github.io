@@ -23,43 +23,28 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
+          mkdir -p assets/data
+
           # Build ISO date range (last 365 days)
           FROM_DATE=$(date -d '1 year ago' '+%Y-%m-%d')
           TO_DATE=$(date '+%Y-%m-%d')
 
-          # GraphQL query
-          QUERY="query { user(login: \"DOCKPORT\") { contributionsCollection(from: \"${FROM_DATE}T00:00:00Z\", to: \"${TO_DATE}T00:00:00Z\") { contributionCalendar { totalContributions weeks { contributionDays { contributionCount date color } } } } } }"
-
-          # Fetch and save
+          # Fetch from GitHub GraphQL API
           curl -s -X POST \
             -H "Authorization: bearer ${GH_TOKEN}" \
             -H "Content-Type: application/json" \
-            -d "{\"query\": \"${QUERY}\"}" \
+            -d "{\"query\": \"query { user(login: \\\"DOCKPORT\\\") { contributionsCollection(from: \\\"${FROM_DATE}T00:00:00Z\\\", to: \\\"${TO_DATE}T00:00:00Z\\\") { contributionCalendar { totalContributions weeks { contributionDays { contributionCount date color } } } } } }\"}" \
             "https://api.github.com/graphql" \
             -o contributions_raw.json
 
-          # Extract just the calendar object for the frontend
-          python3 -c "
-import json
+          # Validate and extract the calendar object
+          if ! jq -e '.data.user.contributionsCollection.contributionCalendar' contributions_raw.json > assets/data/contributions.json; then
+            echo "ERROR: No calendar data found"
+            cat contributions_raw.json
+            exit 1
+          fi
 
-with open('contributions_raw.json') as f:
-    data = json.load(f)
-
-calendar = data.get('data', {}).get('user', {}).get('contributionsCollection', {}).get('contributionCalendar', {})
-if not calendar:
-    print('ERROR: No calendar data found')
-    exit(1)
-
-# Save as assets/data/contributions.json
-import os
-os.makedirs('assets/data', exist_ok=True)
-
-with open('assets/data/contributions.json', 'w') as f:
-    json.dump(calendar, f)
-
-print(f'Saved contributions.json with {calendar.get(\"totalContributions\", 0)} total contributions')
-" || exit 1
-
+          echo "Saved contributions.json with $(jq '.totalContributions // 0' assets/data/contributions.json) total contributions"
           rm contributions_raw.json
 
       - name: Commit and push if changed
