@@ -275,31 +275,37 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 
-    // Fetch contribution graph data and render as grid
+    // Fetch contribution graph data from pre-generated static JSON file
     async function fetchContributions() {
         const container = document.getElementById('gh-contributions');
         if (!container) return;
 
         try {
-            const response = await fetch(`https://github-contributions-api.deno.dev/${GITHUB_USER}.json`);
-            if (!response.ok) throw new Error(`Contributions API error: ${response.status}`);
+            const response = await fetch('/assets/data/contributions.json');
+
+            if (!response.ok) throw new Error(`Contributions file error: ${response.status}`);
             const data = await response.json();
 
-            // The API returns: { contributions: [ [7-day-week], [7-day-week], ... ], totalContributions: N }
-            const weeks = data.contributions;
-            if (!weeks || weeks.length === 0) {
+            // The file contains { contributions: weeks, total: totalContributions }
+            // where weeks is array of { contributionDays: [...] }
+            const calendar = data;
+            if (!calendar) {
                 container.innerHTML = '<div class="gh-contrib-error">no contribution data available</div>';
                 return;
             }
 
-            // Render the graph — the API already returns weeks structured as columns of 7 days
+            const weeks = calendar.weeks.map(w => w.contributionDays);
+            if (weeks.length === 0) {
+                container.innerHTML = '<div class="gh-contrib-error">no contribution data available</div>';
+                return;
+            }
+
             const grid = document.createElement('div');
             grid.className = 'gh-contrib-grid';
 
             let maxCount = 0;
             let totalContribs = 0;
 
-            // Find max contribution count for level scaling
             weeks.forEach(week => {
                 week.forEach(day => {
                     if (day.contributionCount > maxCount) maxCount = day.contributionCount;
@@ -307,8 +313,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
 
-            // Create cells week-by-week. Each week is a column (7 rows).
-            // grid-auto-flow: column means we add cells in column-major order.
             weeks.forEach(week => {
                 week.forEach(day => {
                     const count = day.contributionCount || 0;
@@ -328,7 +332,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
 
-            // Build footer with legend
             const footer = document.createElement('div');
             footer.className = 'gh-contrib-footer';
 
