@@ -28,15 +28,17 @@ jobs:
         run: |
           mkdir -p assets/data
 
-          # Build ISO date range (last 365 days)
-          FROM_DATE=$(date -d '1 year ago' '+%Y-%m-%d')
-          TO_DATE=$(date '+%Y-%m-%d')
+          # Build ISO date range (last 365 days) using Pacific Time to match GitHub's contribution graph
+          FROM_DATE=$(TZ='America/Los_Angeles' date -d '1 year ago' '+%Y-%m-%d')
+          TO_DATE=$(TZ='America/Los_Angeles' date '+%Y-%m-%d')
+          FROM_OFFSET=$(TZ='America/Los_Angeles' date -d '1 year ago' '+%:z')
+          TO_OFFSET=$(TZ='America/Los_Angeles' date '+%:z')
 
-          # Fetch from GitHub GraphQL API
+          # Fetch from GitHub GraphQL API (use Pacific Time offset so contributions match GitHub's profile)
           curl -s -X POST \
             -H "Authorization: bearer ${GH_TOKEN}" \
             -H "Content-Type: application/json" \
-            -d "{\"query\": \"query { user(login: \\\"DOCKPORT\\\") { contributionsCollection(from: \\\"${FROM_DATE}T00:00:00Z\\\", to: \\\"${TO_DATE}T00:00:00Z\\\") { contributionCalendar { totalContributions weeks { contributionDays { contributionCount date color } } } } } }\"}" \
+            -d "{\"query\": \"query { user(login: \\\"DOCKPORT\\\") { contributionsCollection(from: \\\"${FROM_DATE}T00:00:00${FROM_OFFSET}\\\", to: \\\"${TO_DATE}T00:00:00${TO_OFFSET}\\\") { contributionCalendar { totalContributions weeks { contributionDays { contributionCount date color } } } } } }\"}" \
             "https://api.github.com/graphql" \
             -o contributions_raw.json
 
