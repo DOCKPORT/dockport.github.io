@@ -327,24 +327,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const containerEl = document.createElement('div');
             containerEl.className = 'gh-contrib-container';
 
-            // Month label row
+            // Month label row (evenly spaced, like GitHub)
             const monthsRow = document.createElement('div');
             monthsRow.className = 'gh-contrib-months';
-            monthsRow.style.gridTemplateColumns = `repeat(${weeks.length}, 1fr)`;
-            let colIdx = 0;
-            visibleMonths.forEach((m, mi) => {
-                const span = m.end - m.start;
-                // Push empty fillers for gap before this label
-                for (let i = colIdx; i < m.start; i++) {
-                    monthsRow.appendChild(document.createElement('div'));
-                    colIdx++;
-                }
+            visibleMonths.forEach(m => {
                 const label = document.createElement('div');
                 label.className = 'gh-contrib-month';
                 label.textContent = m.label;
-                label.style.gridColumn = `${m.start + 1} / ${m.end + 1}`;
                 monthsRow.appendChild(label);
-                colIdx = m.end;
             });
 
             const grid = document.createElement('div');
