@@ -50,6 +50,32 @@ jobs:
           fi
 
           echo "Saved contributions.json with $(jq '.totalContributions // 0' assets/data/contributions.json) total contributions"
+
+          # Pad first week to 7 days (Sun-Sat) for proper grid alignment matching GitHub's profile
+          node -e "
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('assets/data/contributions.json','utf8'));
+          const weeks = data.weeks;
+          if (weeks.length > 0) {
+            const first = weeks[0].contributionDays;
+            const pad = 7 - first.length;
+            if (pad > 0 && pad < 7) {
+              const firstDate = new Date(first[0].date + 'T00:00:00');
+              for (let i = pad - 1; i >= 0; i--) {
+                const d = new Date(firstDate);
+                d.setDate(d.getDate() - (i + 1));
+                first.unshift({
+                  contributionCount: 0,
+                  date: d.toISOString().slice(0,10),
+                  color: '#ebedf0'
+                });
+              }
+            }
+          }
+          fs.writeFileSync('assets/data/contributions.json', JSON.stringify(data));
+          "
+          echo "Padded first week for grid alignment"
+
           rm contributions_raw.json
 
       - name: Commit and push if changed
