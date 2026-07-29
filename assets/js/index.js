@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!container) return;
 
         try {
-            const response = await fetch('/assets/data/contributions.json');
+            const response = await fetch('assets/data/contributions.json');
 
             if (!response.ok) throw new Error(`Contributions file error: ${response.status}`);
             const data = await response.json();
@@ -323,6 +323,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             // Filter out months that span zero columns
             const visibleMonths = monthLabels.filter(m => m.end > m.start);
+            // Remove duplicate month at start if same as last (e.g. Jul...Jul → drop first partial Jul, show Aug-Jul)
+            if (visibleMonths.length > 1 && visibleMonths[0].label === visibleMonths[visibleMonths.length - 1].label) {
+                visibleMonths.shift();
+            }
 
             const containerEl = document.createElement('div');
             containerEl.className = 'gh-contrib-container';
