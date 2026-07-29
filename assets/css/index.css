@@ -730,6 +730,24 @@ h1 {
     padding: 2rem 0;
 }
 
+.gh-contrib-container {
+    width: 100%;
+}
+
+.gh-contrib-months {
+    display: grid;
+    gap: 3px;
+    padding: 0 0 2px 0;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.gh-contrib-month {
+    text-align: left;
+    padding-left: 2px;
+}
+
 /* Contribution Graph Grid */
 .gh-contrib-grid {
     display: grid;

@@ -300,8 +300,56 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            // Build month labels from each week's first day
+            const monthLabels = [];
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            let lastMonth = -1;
+            let monthSpanStart = 0;
+            weeks.forEach((week, wi) => {
+                const firstDay = week[0];
+                if (!firstDay) return;
+                const d = new Date(firstDay.date + 'T00:00:00');
+                const m = d.getMonth();
+                if (m !== lastMonth) {
+                    if (lastMonth !== -1) {
+                        monthLabels.push({ label: monthNames[lastMonth], start: monthSpanStart, end: wi });
+                    }
+                    lastMonth = m;
+                    monthSpanStart = wi;
+                }
+            });
+            if (lastMonth !== -1) {
+                monthLabels.push({ label: monthNames[lastMonth], start: monthSpanStart, end: weeks.length });
+            }
+            // Filter out months that span zero columns
+            const visibleMonths = monthLabels.filter(m => m.end > m.start);
+
+            const containerEl = document.createElement('div');
+            containerEl.className = 'gh-contrib-container';
+
+            // Month label row
+            const monthsRow = document.createElement('div');
+            monthsRow.className = 'gh-contrib-months';
+            monthsRow.style.gridTemplateColumns = `repeat(${weeks.length}, 1fr)`;
+            let colIdx = 0;
+            visibleMonths.forEach((m, mi) => {
+                const span = m.end - m.start;
+                // Push empty fillers for gap before this label
+                for (let i = colIdx; i < m.start; i++) {
+                    monthsRow.appendChild(document.createElement('div'));
+                    colIdx++;
+                }
+                const label = document.createElement('div');
+                label.className = 'gh-contrib-month';
+                label.textContent = m.label;
+                label.style.gridColumn = `${m.start + 1} / ${m.end + 1}`;
+                monthsRow.appendChild(label);
+                colIdx = m.end;
+            });
+
             const grid = document.createElement('div');
             grid.className = 'gh-contrib-grid';
+            grid.style.gridTemplateColumns = `repeat(${weeks.length}, 1fr)`;
 
             let maxCount = 0;
             let totalContribs = 0;
@@ -353,9 +401,12 @@ document.addEventListener('DOMContentLoaded', () => {
             footer.appendChild(totalLabel);
             footer.appendChild(legend);
 
+            containerEl.appendChild(monthsRow);
+            containerEl.appendChild(grid);
+            containerEl.appendChild(footer);
+
             container.innerHTML = '';
-            container.appendChild(grid);
-            container.appendChild(footer);
+            container.appendChild(containerEl);
 
         } catch (err) {
             console.error('Failed to fetch contributions:', err);
