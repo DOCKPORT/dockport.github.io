@@ -5,8 +5,6 @@ on:
     branches:
       - main
   schedule:
-    # Run every 15 minutes for testing (will revert after verification)
-    - cron: '*/15 * * * *'
     # Run daily at midnight UTC
     - cron: '0 0 * * *'
   workflow_dispatch:
