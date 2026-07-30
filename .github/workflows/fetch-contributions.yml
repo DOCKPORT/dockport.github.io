@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - '.github/workflows/fetch-contributions.yml'
-      - 'assets/data/contributions.json'
   schedule:
     # Run daily at midnight UTC
     - cron: '0 0 * * *'
