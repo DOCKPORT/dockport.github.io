@@ -25,10 +25,10 @@ jobs:
         run: |
           mkdir -p assets/data
 
-          # Build ISO date range (widen by 1 day on each side to match GitHub's profile count)
+          # Build ISO date range (widen start by 1 day to match GitHub's profile count)
           FROM_DATE=$(TZ='America/Los_Angeles' date -d '366 days ago' '+%Y-%m-%d')
-          TO_DATE=$(TZ='America/Los_Angeles' date -d '+1 day' '+%Y-%m-%d')
-          FROM_OFFSET=$(TZ='America/Los_Angeles' date -d '1 year ago' '+%:z')
+          TO_DATE=$(TZ='America/Los_Angeles' date '+%Y-%m-%d')
+          FROM_OFFSET=$(TZ='America/Los_Angeles' date -d '366 days ago' '+%:z')
           TO_OFFSET=$(TZ='America/Los_Angeles' date '+%:z')
 
           # Fetch from GitHub GraphQL API (use Pacific Time offset so contributions match GitHub's profile)
