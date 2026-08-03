@@ -242,39 +242,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const GITHUB_USER = 'DOCKPORT';
 
-    // Language color mapping for dots
-    const LANG_COLORS = {
-        'Python': '#3572A5',
-        'JavaScript': '#f1e05a',
-        'TypeScript': '#3178c6',
-        'HTML': '#e34c26',
-        'CSS': '#563d7c',
-        'Shell': '#89e051',
-        'C': '#555555',
-        'C++': '#f34b7d',
-        'Java': '#b07219',
-        'Go': '#00ADD8',
-        'Rust': '#dea584',
-        'Ruby': '#701516',
-        'PHP': '#4F5D95',
-        'Swift': '#F05138',
-        'Kotlin': '#A97BFF',
-        'Dart': '#00B4AB',
-        'Lua': '#000080',
-        'Perl': '#0298c3',
-        'Scala': '#c22d40',
-        'Elixir': '#6e4a7e',
-        'Haskell': '#5e5086',
-        'Clojure': '#db5855',
-        'Vue': '#41b883',
-        'Svelte': '#ff3e00',
-        'Jupyter Notebook': '#DA5B0B',
-        'Makefile': '#427819',
-        'Dockerfile': '#384d54',
-        'TeX': '#3D6117',
-    };
-
-
     // Fetch contribution graph data from pre-generated static JSON file
     async function fetchContributions() {
         const container = document.getElementById('gh-contributions');
