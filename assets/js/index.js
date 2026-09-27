@@ -101,8 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 minimumFractionDigits: 2, 
                 maximumFractionDigits: 2 
             });
-            const changeStr = (parseFloat(changeValue) * 100).toFixed(2);
-            const isUp = parseFloat(changeValue) >= 0;
+            const changePercent = parseFloat(changeValue) * 100;
+            const changeStr = Math.abs(changePercent).toFixed(2);
+            const isUp = changePercent >= 0;
+            const changeArrow = isUp ? '\u2191' : '\u2193';
 
             let flashClass = '';
             let stablePart = priceStr;
@@ -145,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             state.changeEls.forEach(el => {
                 if (el) {
-                    el.textContent = `${isUp ? '+' : ''}${changeStr}%`;
+                    el.innerHTML = `<span class="ticker__arrow">${changeArrow}</span>${changeStr}%`;
                     el.className = `ticker__value ${isUp ? 'ticker__value--up' : 'ticker__value--down'}`;
                 }
             });

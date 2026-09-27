@@ -293,6 +293,20 @@ h1 {
     color: #ff4d4d;
 }
 
+.ticker__value--up,
+.ticker__value--down {
+    display: inline-flex;
+    align-items: center;
+}
+
+.ticker__arrow {
+    display: inline-block;
+    width: 0.75em;
+    text-align: center;
+    margin-right: 0.25em;
+    font-size: 1em;
+}
+
 .flash-up {
     animation: flashGreen 0.8s steps(1);
 }
