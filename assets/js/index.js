@@ -314,27 +314,28 @@ document.addEventListener('DOMContentLoaded', () => {
             grid.className = 'gh-contrib-grid';
             grid.style.gridTemplateColumns = `repeat(${weeks.length}, 1fr)`;
 
-            let maxCount = 0;
             let totalContribs = 0;
-
             weeks.forEach(week => {
                 week.forEach(day => {
-                    if (day.contributionCount > maxCount) maxCount = day.contributionCount;
-                    totalContribs += day.contributionCount;
+                    totalContribs += day.contributionCount || 0;
                 });
             });
+
+            // Map GitHub's own palette colors to levels 0-4.
+            // The API classifies each day, so this matches the profile exactly.
+            // Includes the light palette (default) and the dark palette.
+            const CONTRIB_COLOR_LEVELS = {
+                '#ebedf0': 0, '#9be9a8': 1, '#40c463': 2, '#30a14e': 3, '#216e39': 4,
+                '#161b22': 0, '#0e4429': 1, '#006d32': 2, '#26a641': 3, '#39d353': 4
+            };
 
             weeks.forEach(week => {
                 week.forEach(day => {
                     const count = day.contributionCount || 0;
-                    let level = 0;
-                    if (count > 0 && maxCount > 0) {
-                        const ratio = count / maxCount;
-                        if (ratio > 0.75) level = 4;
-                        else if (ratio > 0.5) level = 3;
-                        else if (ratio > 0.25) level = 2;
-                        else level = 1;
-                    }
+                    const color = (day.color || '').toLowerCase();
+                    const level = color in CONTRIB_COLOR_LEVELS
+                        ? CONTRIB_COLOR_LEVELS[color]
+                        : (count > 0 ? 1 : 0);
 
                     const cell = document.createElement('div');
                     cell.className = `gh-contrib-cell level-${level}`;
