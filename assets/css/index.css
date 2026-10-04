@@ -203,9 +203,8 @@ h1 {
 
 .teal-text {
     color: var(--primary-teal);
-    font-family: 'Geist Mono', monospace;
-    letter-spacing: -0.04em;
-    font-weight: 700;
+    font-family: 'DockPort Pixel Line', monospace;
+    letter-spacing: 0;
 }
 
 .fira-code {
