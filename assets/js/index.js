@@ -129,21 +129,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
 
-            // Map GitHub's own palette colors to levels 0-4.
-            // The API classifies each day, so this matches the profile exactly.
-            // Includes the light palette (default) and the dark palette.
-            const CONTRIB_COLOR_LEVELS = {
-                '#ebedf0': 0, '#9be9a8': 1, '#40c463': 2, '#30a14e': 3, '#216e39': 4,
-                '#161b22': 0, '#0e4429': 1, '#006d32': 2, '#26a641': 3, '#39d353': 4
+            // Derive levels from contribution counts, not from GitHub's palette.
+            // GitHub recolors the calendar for seasonal themes (orange for
+            // Halloween, for example), so a fixed color table breaks each season.
+            // Quartiles over the active days keep the full 1-4 range visible.
+            const activeCounts = weeks
+                .flat()
+                .map(day => day.contributionCount || 0)
+                .filter(count => count > 0)
+                .sort((a, b) => a - b);
+
+            const quantile = (p) => {
+                if (activeCounts.length === 0) return 0;
+                const index = Math.min(
+                    activeCounts.length - 1,
+                    Math.floor(p * (activeCounts.length - 1))
+                );
+                return activeCounts[index];
+            };
+
+            const levelThresholds = [quantile(0.25), quantile(0.5), quantile(0.75)];
+
+            const levelForCount = (count) => {
+                if (count <= 0) return 0;
+                let level = 1;
+                levelThresholds.forEach((threshold, index) => {
+                    if (count > threshold) level = index + 2;
+                });
+                return level;
             };
 
             weeks.forEach(week => {
                 week.forEach(day => {
                     const count = day.contributionCount || 0;
-                    const color = (day.color || '').toLowerCase();
-                    const level = color in CONTRIB_COLOR_LEVELS
-                        ? CONTRIB_COLOR_LEVELS[color]
-                        : (count > 0 ? 1 : 0);
+                    const level = levelForCount(count);
 
                     const cell = document.createElement('div');
                     cell.className = `gh-contrib-cell level-${level}`;
